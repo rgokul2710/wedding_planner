@@ -19,10 +19,15 @@ export interface WeddingDetailsInput {
   currency: string
 }
 
+// Ordered + limited to 1 rather than .maybeSingle(): a user can now belong to
+// more than one wedding (their own, plus any they've accepted a family
+// invite to), and maybeSingle() throws if RLS returns more than one row.
+// The app still only ever shows "my wedding" as a single one for now — the
+// earliest-created membership wins — ahead of true multi-wedding support.
 export async function getMyWedding(): Promise<Wedding | null> {
-  const { data, error } = await supabase.from('weddings').select('*').maybeSingle()
+  const { data, error } = await supabase.from('weddings').select('*').order('created_at', { ascending: true }).limit(1)
   if (error) throw error
-  return data
+  return data[0] ?? null
 }
 
 export async function createWedding(input: WeddingDetailsInput): Promise<Wedding> {

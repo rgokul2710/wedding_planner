@@ -490,6 +490,10 @@ export interface Database {
         }
         Returns: Database['public']['Tables']['weddings']['Row']
       }
+      claim_pending_invites: {
+        Args: Record<string, never>
+        Returns: void
+      }
     }
   }
 }

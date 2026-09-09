@@ -18,14 +18,31 @@ const AuthContext = React.createContext<AuthContextValue | null>(null)
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = React.useState<Session | null>(null)
   const [loading, setLoading] = React.useState(true)
+  const claimedUserId = React.useRef<string | null>(null)
 
   React.useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
+    // Claim any pending family invite addressed to this email before anything
+    // that depends on wedding membership (e.g. the onboarding redirect) runs.
+    async function claimInvitesOnce(candidate: Session | null) {
+      const userId = candidate?.user.id ?? null
+      if (userId && claimedUserId.current !== userId) {
+        claimedUserId.current = userId
+        try {
+          await supabase.rpc('claim_pending_invites')
+        } catch {
+          // Best-effort — a failed claim just means they stay on their own wedding (or onboarding).
+        }
+      }
+    }
+
+    supabase.auth.getSession().then(async ({ data }) => {
+      await claimInvitesOnce(data.session)
       setSession(data.session)
       setLoading(false)
     })
 
-    const { data: subscription } = supabase.auth.onAuthStateChange((_event, newSession) => {
+    const { data: subscription } = supabase.auth.onAuthStateChange(async (_event, newSession) => {
+      await claimInvitesOnce(newSession)
       setSession(newSession)
       setLoading(false)
     })
