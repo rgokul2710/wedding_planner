@@ -85,7 +85,7 @@ This project is being built incrementally. Each phase ships a working, typecheck
 - [x] **Phase 4** — Tasks
 - [x] **Phase 5** — Guests
 - [x] **Phase 6** — Budget + payments
-- [ ] **Phase 7** — Vendors
+- [x] **Phase 7** — Vendors
 - [ ] **Phase 8** — Events / timeline
 - [ ] **Phase 9** — Documents / storage
 - [ ] **Phase 10** — Family / member permissions

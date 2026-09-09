@@ -315,6 +315,58 @@ export interface Database {
         }
         Relationships: []
       }
+      vendors: {
+        Row: {
+          id: string
+          wedding_id: string
+          name: string
+          category: string
+          contact_person: string | null
+          phone: string | null
+          email: string | null
+          website: string | null
+          address: string | null
+          quoted_amount: number | null
+          final_amount: number | null
+          advance_paid: number
+          rating: number | null
+          notes: string | null
+          created_by: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          wedding_id: string
+          name: string
+          category?: string
+          contact_person?: string | null
+          phone?: string | null
+          email?: string | null
+          website?: string | null
+          address?: string | null
+          quoted_amount?: number | null
+          final_amount?: number | null
+          advance_paid?: number
+          rating?: number | null
+          notes?: string | null
+          created_by: string
+        }
+        Update: {
+          name?: string
+          category?: string
+          contact_person?: string | null
+          phone?: string | null
+          email?: string | null
+          website?: string | null
+          address?: string | null
+          quoted_amount?: number | null
+          final_amount?: number | null
+          advance_paid?: number
+          rating?: number | null
+          notes?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: Record<string, never>
     Functions: {

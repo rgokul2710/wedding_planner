@@ -1,0 +1,15 @@
+export const VENDOR_CATEGORIES = [
+  'Venue',
+  'Caterer',
+  'Photographer',
+  'Videographer',
+  'Decorator',
+  'Makeup',
+  'Clothing',
+  'Jewellery',
+  'Invitation',
+  'Transportation',
+  'Music',
+  'Accommodation',
+  'Other',
+] as const
