@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { AlertCircle } from 'lucide-react'
 import * as React from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
@@ -7,6 +6,7 @@ import { toast } from 'sonner'
 import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { FormError } from '@/components/ui/form-error'
 import { Input, Label } from '@/components/ui/input'
 import { useAuth } from '@/hooks/use-auth'
 
@@ -47,12 +47,7 @@ export function UpdatePasswordPage() {
   return (
     <Card>
       <form className="space-y-4" onSubmit={handleSubmit(onSubmit)} noValidate>
-        {formError && (
-          <div className="flex items-start gap-2 rounded-xl bg-danger-500/10 px-3 py-2.5 text-sm text-danger-500">
-            <AlertCircle className="mt-0.5 size-4 shrink-0" />
-            <span>{formError}</span>
-          </div>
-        )}
+        {formError && <FormError message={formError} />}
         <div>
           <Label htmlFor="password">New password</Label>
           <Input id="password" type="password" placeholder="At least 8 characters" autoComplete="new-password" {...register('password')} />

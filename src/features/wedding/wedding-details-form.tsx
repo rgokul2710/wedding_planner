@@ -1,9 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { AlertCircle } from 'lucide-react'
 import * as React from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Button } from '@/components/ui/button'
+import { FormError } from '@/components/ui/form-error'
 import { Input, Label } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { CURRENCIES, DEFAULT_CURRENCY } from '@/lib/currencies'
@@ -68,12 +68,7 @@ export function WeddingDetailsForm({ defaultValues, submitLabel, onSubmit }: Wed
 
   return (
     <form className="space-y-8" onSubmit={handleSubmit(handleFormSubmit)} noValidate>
-      {formError && (
-        <div className="flex items-start gap-2 rounded-xl bg-danger-500/10 px-3 py-2.5 text-sm text-danger-500">
-          <AlertCircle className="mt-0.5 size-4 shrink-0" />
-          <span>{formError}</span>
-        </div>
-      )}
+      {formError && <FormError message={formError} />}
 
       <section className="space-y-4">
         <h2 className="font-display text-base font-semibold text-ink-900 dark:text-ink-50">The Couple</h2>

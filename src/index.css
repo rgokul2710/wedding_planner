@@ -40,9 +40,13 @@
   --color-ink-800: #2e2824;
   --color-ink-900: #1c1714;
 
+  --color-success-300: #6ba885;
   --color-success-500: #4b8a5f;
+  --color-success-700: #2f5c3d;
   --color-warning-500: #c98a2c;
+  --color-danger-300: #e08a83;
   --color-danger-500: #c0433a;
+  --color-danger-700: #8f2e26;
 
   --shadow-soft: 0 1px 2px rgb(28 23 20 / 0.04), 0 8px 24px -8px rgb(28 23 20 / 0.10);
   --shadow-soft-lg: 0 2px 4px rgb(28 23 20 / 0.05), 0 20px 40px -16px rgb(28 23 20 / 0.16);

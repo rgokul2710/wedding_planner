@@ -12,6 +12,8 @@ A private, mobile-first wedding planning app — tasks, guests, budget, vendors,
 - **sonner** — toast notifications
 - **Supabase** — auth, database, storage, realtime
 - **react-hook-form + zod** — form state and validation
+- **@tanstack/react-query** — server-state caching and mutations
+- **Recharts** — budget/report charts (lazy-loaded — its bundle cost only applies to the pages that use it)
 
 ## Getting started
 
@@ -90,4 +92,20 @@ This project is being built incrementally. Each phase ships a working, typecheck
 - [x] **Phase 9** — Documents / storage (and Inspiration, which the spec's phase list didn't assign its own slot)
 - [x] **Phase 10** — Family / member permissions
 - [x] **Phase 11** — Reports
-- [ ] **Phase 12** — Polish, testing, final deployment
+- [x] **Phase 12** — Polish, testing, final deployment
+
+### What Phase 12 covered
+
+- A top-level error boundary — an unexpected render error now shows a friendly "Something went wrong" screen with a reload button instead of a blank page. Verified by deliberately throwing inside a page, confirming the fallback renders, then reverting.
+- Every page except Dashboard/Tasks/Guests (the primary bottom-nav tabs) is now lazy-loaded, cutting the initial JS payload from ~252KB to ~115KB gzipped.
+- A real accessibility fix: the success/warning/danger badge and form-error-banner colors used to fail WCAG contrast against their own light tint backgrounds (as low as ~2.5:1 in dark mode) because those three status hues only had one shade defined, unlike the rose/gold accents which already had a proper light/dark text pair. Added dedicated darker/lighter text steps and fixed both the `Badge` component and every form's error banner (extracted into one shared `FormError` component along the way, replacing 14 duplicated copies of the same markup).
+
+## Going live — final checklist
+
+All 12 phases are implemented and every migration through `0009` exists. Before using this for real:
+
+1. Run every migration in `supabase/migrations/` in order (SQL Editor), if you haven't already.
+2. Fill in `.env` locally (see Getting Started above) and confirm `npm run dev` actually works end to end: sign up, complete onboarding, and try each module once.
+3. Set the two `VITE_SUPABASE_*` repo secrets (see Deployment above) and confirm **Settings → Pages → Source** is set to **GitHub Actions**.
+4. Push to `main` and check the **Actions** tab for a green run.
+5. Visit `https://<your-github-username>.github.io/wedding_planner/`, sign up with your real email, and invite your partner/family from the Family page.

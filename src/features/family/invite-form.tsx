@@ -1,10 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { AlertCircle } from 'lucide-react'
 import * as React from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import { DialogFooter } from '@/components/ui/dialog'
+import { FormError } from '@/components/ui/form-error'
 import { Input, Label } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { INVITABLE_ROLES } from '@/features/family/constants'
@@ -46,12 +46,7 @@ export function InviteForm({ onSubmit, onCancel }: InviteFormProps) {
 
   return (
     <form className="space-y-4" onSubmit={handleSubmit(handleFormSubmit)} noValidate>
-      {formError && (
-        <div className="flex items-start gap-2 rounded-xl bg-danger-500/10 px-3 py-2.5 text-sm text-danger-500">
-          <AlertCircle className="mt-0.5 size-4 shrink-0" />
-          <span>{formError}</span>
-        </div>
-      )}
+      {formError && <FormError message={formError} />}
 
       <div>
         <Label htmlFor="email">Email</Label>
