@@ -83,7 +83,7 @@ This project is being built incrementally. Each phase ships a working, typecheck
 - [x] **Phase 2** — Supabase setup + authentication (sign up, log in, log out, password reset, protected routes)
 - [x] **Phase 3** — Wedding setup + dashboard
 - [x] **Phase 4** — Tasks
-- [ ] **Phase 5** — Guests
+- [x] **Phase 5** — Guests
 - [ ] **Phase 6** — Budget + payments
 - [ ] **Phase 7** — Vendors
 - [ ] **Phase 8** — Events / timeline

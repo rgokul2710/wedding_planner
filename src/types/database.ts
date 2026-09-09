@@ -2,6 +2,8 @@ export type WeddingMemberRole = 'owner' | 'partner' | 'family' | 'viewer'
 export type WeddingMemberStatus = 'pending' | 'accepted'
 export type TaskPriority = 'low' | 'medium' | 'high' | 'urgent'
 export type TaskStatus = 'not_started' | 'in_progress' | 'completed' | 'cancelled'
+export type RsvpStatus = 'pending' | 'confirmed' | 'declined'
+export type InvitationStatus = 'not_sent' | 'sent' | 'delivered'
 
 export interface Database {
   public: {
@@ -137,6 +139,77 @@ export interface Database {
           status?: TaskStatus
           estimated_cost?: number | null
           actual_cost?: number | null
+          notes?: string | null
+        }
+        Relationships: []
+      }
+      guest_groups: {
+        Row: {
+          id: string
+          wedding_id: string
+          name: string
+          notes: string | null
+          created_at: string
+        }
+        Insert: {
+          wedding_id: string
+          name: string
+          notes?: string | null
+        }
+        Update: {
+          name?: string
+          notes?: string | null
+        }
+        Relationships: []
+      }
+      guests: {
+        Row: {
+          id: string
+          wedding_id: string
+          guest_group_id: string | null
+          name: string
+          phone: string | null
+          email: string | null
+          total_guests: number
+          child_count: number
+          rsvp_status: RsvpStatus
+          food_preference: string | null
+          accommodation_required: boolean
+          transportation_required: boolean
+          invitation_status: InvitationStatus
+          notes: string | null
+          created_by: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          wedding_id: string
+          guest_group_id?: string | null
+          name: string
+          phone?: string | null
+          email?: string | null
+          total_guests?: number
+          child_count?: number
+          rsvp_status?: RsvpStatus
+          food_preference?: string | null
+          accommodation_required?: boolean
+          transportation_required?: boolean
+          invitation_status?: InvitationStatus
+          notes?: string | null
+          created_by: string
+        }
+        Update: {
+          guest_group_id?: string | null
+          name?: string
+          phone?: string | null
+          email?: string | null
+          total_guests?: number
+          child_count?: number
+          rsvp_status?: RsvpStatus
+          food_preference?: string | null
+          accommodation_required?: boolean
+          transportation_required?: boolean
+          invitation_status?: InvitationStatus
           notes?: string | null
         }
         Relationships: []
