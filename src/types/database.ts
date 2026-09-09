@@ -6,6 +6,7 @@ export type RsvpStatus = 'pending' | 'confirmed' | 'declined'
 export type InvitationStatus = 'not_sent' | 'sent' | 'delivered'
 export type BudgetPaymentStatus = 'not_paid' | 'partially_paid' | 'fully_paid'
 export type PaymentMethod = 'cash' | 'upi' | 'bank_transfer' | 'card' | 'other'
+export type VendorStatus = 'considering' | 'selected' | 'rejected'
 
 export interface Database {
   public: {
@@ -331,6 +332,9 @@ export interface Database {
           advance_paid: number
           rating: number | null
           notes: string | null
+          status: VendorStatus
+          pros: string | null
+          cons: string | null
           created_by: string
           created_at: string
           updated_at: string
@@ -349,6 +353,9 @@ export interface Database {
           advance_paid?: number
           rating?: number | null
           notes?: string | null
+          status?: VendorStatus
+          pros?: string | null
+          cons?: string | null
           created_by: string
         }
         Update: {
@@ -364,6 +371,9 @@ export interface Database {
           advance_paid?: number
           rating?: number | null
           notes?: string | null
+          status?: VendorStatus
+          pros?: string | null
+          cons?: string | null
         }
         Relationships: []
       }
@@ -492,6 +502,10 @@ export interface Database {
       }
       claim_pending_invites: {
         Args: Record<string, never>
+        Returns: void
+      }
+      select_vendor: {
+        Args: { p_vendor_id: string }
         Returns: void
       }
     }

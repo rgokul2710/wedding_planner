@@ -1,5 +1,6 @@
 import { computePaymentStatus, paymentStatusLabel } from '@/features/budget/constants'
 import { isTaskOverdue, taskPriorityLabel, taskStatusLabel } from '@/features/tasks/constants'
+import { vendorStatusLabel } from '@/features/vendors/constants'
 import type { StatusBarDatum } from '@/features/reports/status-bar-chart'
 import type { BudgetItem } from '@/services/budget-items'
 import type { Guest } from '@/services/guests'
@@ -83,6 +84,7 @@ export function vendorsToCsvRows(vendors: Vendor[]) {
     return {
       Name: v.name,
       Category: v.category,
+      Status: vendorStatusLabel(v.status),
       'Contact Person': v.contact_person ?? '',
       Phone: v.phone ?? '',
       Email: v.email ?? '',
@@ -91,6 +93,15 @@ export function vendorsToCsvRows(vendors: Vendor[]) {
       'Advance Paid': v.advance_paid,
       Balance: effective != null ? effective - v.advance_paid : '',
       Rating: v.rating ?? '',
+      Pros: v.pros ?? '',
+      Cons: v.cons ?? '',
     }
   })
+}
+
+/** Only "selected" vendors count as a real commitment — see VendorCommitmentChart for why. */
+export function totalVendorCommitments(vendors: Vendor[]) {
+  return vendors
+    .filter((v) => v.status === 'selected')
+    .reduce((total, v) => total + (v.final_amount ?? v.quoted_amount ?? 0), 0)
 }

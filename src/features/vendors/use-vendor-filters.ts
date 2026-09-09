@@ -1,12 +1,14 @@
 import * as React from 'react'
 import type { Vendor } from '@/services/vendors'
+import type { VendorStatus } from '@/types/database'
 
 export interface VendorFilterState {
   search: string
   category: string
+  status: VendorStatus | 'all'
 }
 
-const DEFAULT_FILTERS: VendorFilterState = { search: '', category: 'all' }
+const DEFAULT_FILTERS: VendorFilterState = { search: '', category: 'all', status: 'all' }
 
 export function useVendorFilters(vendors: Vendor[]) {
   const [filters, setFilters] = React.useState<VendorFilterState>(DEFAULT_FILTERS)
@@ -20,6 +22,7 @@ export function useVendorFilters(vendors: Vendor[]) {
 
     return vendors.filter((vendor) => {
       if (filters.category !== 'all' && vendor.category !== filters.category) return false
+      if (filters.status !== 'all' && vendor.status !== filters.status) return false
       if (search) {
         const haystack = `${vendor.name} ${vendor.contact_person ?? ''}`.toLowerCase()
         if (!haystack.includes(search)) return false

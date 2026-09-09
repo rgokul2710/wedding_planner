@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Loader2, Plus, Store } from 'lucide-react'
 import * as React from 'react'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -12,7 +13,7 @@ import { useVendorFilters } from '@/features/vendors/use-vendor-filters'
 import { useAuth } from '@/hooks/use-auth'
 import { useWedding } from '@/hooks/use-wedding'
 import { useVendors, vendorsQueryKey } from '@/hooks/use-vendors'
-import { createVendor, deleteVendor, updateVendor } from '@/services/vendors'
+import { createVendor, deleteVendor, selectVendor, unselectVendor, updateVendor } from '@/services/vendors'
 import type { Vendor } from '@/services/vendors'
 
 export function VendorsPage() {
@@ -55,6 +56,19 @@ export function VendorsPage() {
       invalidate()
       setDeletingVendor(null)
     },
+  })
+
+  const selectMutation = useMutation({
+    mutationFn: (vendor: Vendor) => selectVendor(vendor.id),
+    onSuccess: (_data, vendor) => {
+      invalidate()
+      toast.success(`${vendor.name} marked as selected for ${vendor.category}.`)
+    },
+  })
+
+  const unselectMutation = useMutation({
+    mutationFn: (vendor: Vendor) => unselectVendor(vendor.id),
+    onSuccess: invalidate,
   })
 
   function openCreateForm() {
@@ -114,6 +128,8 @@ export function VendorsPage() {
                   currency={wedding!.currency}
                   onEdit={openEditForm}
                   onDelete={setDeletingVendor}
+                  onSelect={(v) => selectMutation.mutate(v)}
+                  onUnselect={(v) => unselectMutation.mutate(v)}
                 />
               ))}
             </div>

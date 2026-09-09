@@ -8,6 +8,7 @@ import {
   guestsToCsvRows,
   taskStatusChartData,
   tasksToCsvRows,
+  totalVendorCommitments,
   vendorsToCsvRows,
 } from '@/features/reports/report-data'
 import { StatusBarChart } from '@/features/reports/status-bar-chart'
@@ -80,7 +81,7 @@ export function ReportsPage() {
 
   const invited = allGuests.reduce((total, g) => total + g.total_guests, 0)
 
-  const totalCommitments = allVendors.reduce((total, v) => total + (v.final_amount ?? v.quoted_amount ?? 0), 0)
+  const totalCommitments = totalVendorCommitments(allVendors)
   const totalAdvancePaid = allVendors.reduce((total, v) => total + v.advance_paid, 0)
 
   return (

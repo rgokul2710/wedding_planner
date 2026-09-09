@@ -8,7 +8,7 @@ import { FormError } from '@/components/ui/form-error'
 import { Input, Label, Textarea } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { StarRating } from '@/components/ui/star-rating'
-import { VENDOR_CATEGORIES } from '@/features/vendors/constants'
+import { VENDOR_CATEGORIES, VENDOR_STATUSES } from '@/features/vendors/constants'
 import { optionalNonNegativeNumber, optionalText } from '@/lib/zod-helpers'
 import type { Vendor, VendorInput } from '@/services/vendors'
 
@@ -24,6 +24,9 @@ const vendorSchema = z.object({
   finalAmount: optionalNonNegativeNumber,
   advancePaid: z.coerce.number().nonnegative('Must be zero or more'),
   rating: z.number().int().min(1).max(5).nullable(),
+  status: z.enum(['considering', 'selected', 'rejected']),
+  pros: optionalText,
+  cons: optionalText,
   notes: optionalText,
 })
 
@@ -57,6 +60,9 @@ export function VendorForm({ vendor, onSubmit, onCancel }: VendorFormProps) {
       finalAmount: vendor?.final_amount ?? undefined,
       advancePaid: vendor?.advance_paid ?? 0,
       rating: vendor?.rating ?? null,
+      status: vendor?.status ?? 'considering',
+      pros: vendor?.pros ?? undefined,
+      cons: vendor?.cons ?? undefined,
       notes: vendor?.notes ?? undefined,
     },
   })
@@ -76,6 +82,9 @@ export function VendorForm({ vendor, onSubmit, onCancel }: VendorFormProps) {
         finalAmount: values.finalAmount ?? null,
         advancePaid: values.advancePaid,
         rating: values.rating,
+        status: values.status,
+        pros: values.pros ?? null,
+        cons: values.cons ?? null,
         notes: values.notes ?? null,
       })
     } catch (err) {
@@ -159,9 +168,43 @@ export function VendorForm({ vendor, onSubmit, onCancel }: VendorFormProps) {
         </div>
       </div>
 
-      <div>
-        <Label>Rating</Label>
-        <Controller control={control} name="rating" render={({ field }) => <StarRating value={field.value} onChange={field.onChange} />} />
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <Label>Rating</Label>
+          <Controller control={control} name="rating" render={({ field }) => <StarRating value={field.value} onChange={field.onChange} />} />
+        </div>
+        <div>
+          <Label htmlFor="status">Status</Label>
+          <Controller
+            control={control}
+            name="status"
+            render={({ field }) => (
+              <Select value={field.value} onValueChange={field.onChange}>
+                <SelectTrigger id="status">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {VENDOR_STATUSES.map((status) => (
+                    <SelectItem key={status.value} value={status.value}>
+                      {status.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <Label htmlFor="pros">Pros</Label>
+          <Textarea id="pros" placeholder="What's good about them?" {...register('pros')} />
+        </div>
+        <div>
+          <Label htmlFor="cons">Cons</Label>
+          <Textarea id="cons" placeholder="What's the downside?" {...register('cons')} />
+        </div>
       </div>
 
       <div>
