@@ -24,10 +24,13 @@ interface InspirationUploadFormProps {
   onCancel: () => void
 }
 
+function fileReducer(_state: File | null, action: File | null) {
+  return action
+}
+
 export function InspirationUploadForm({ onSubmit, onCancel }: InspirationUploadFormProps) {
   const [formError, setFormError] = React.useState<string | null>(null)
-  const [file, setFile] = React.useState<File | null>(null)
-  const [previewUrl, setPreviewUrl] = React.useState<string | null>(null)
+  const [file, setFile] = React.useReducer(fileReducer, null)
 
   const {
     register,
@@ -38,6 +41,19 @@ export function InspirationUploadForm({ onSubmit, onCancel }: InspirationUploadF
     resolver: zodResolver(inspirationSchema),
     defaultValues: { category: INSPIRATION_CATEGORIES[INSPIRATION_CATEGORIES.length - 1] },
   })
+
+  // Derived from `file`, not held in its own state, so there's exactly one
+  // source of truth — the preview can't drift out of sync with the file
+  // that's actually about to be uploaded.
+  const previewUrl = React.useMemo(() => (file ? URL.createObjectURL(file) : null), [file])
+
+  // Revoke the previous blob: URL whenever it's replaced or the form unmounts,
+  // so we don't leak object URLs for images that are never actually uploaded.
+  React.useEffect(() => {
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl)
+    }
+  }, [previewUrl])
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const selected = e.target.files?.[0]
@@ -54,7 +70,6 @@ export function InspirationUploadForm({ onSubmit, onCancel }: InspirationUploadF
     }
     setFormError(null)
     setFile(selected)
-    setPreviewUrl(URL.createObjectURL(selected))
   }
 
   async function handleFormSubmit(values: InspirationFormValues) {
@@ -88,7 +103,9 @@ export function InspirationUploadForm({ onSubmit, onCancel }: InspirationUploadF
           onChange={handleFileChange}
           className="block w-full text-sm text-ink-600 file:mr-3 file:rounded-lg file:border-0 file:bg-cream-100 file:px-3 file:py-2 file:text-sm file:font-medium file:text-ink-700 dark:text-ink-300 dark:file:bg-ink-700 dark:file:text-ink-100"
         />
-        {previewUrl && <img src={previewUrl} alt="Preview" className="mt-3 max-h-48 rounded-xl object-cover" />}
+        {previewUrl && previewUrl.startsWith('blob:') && (
+          <img src={previewUrl} alt="Preview" className="mt-3 max-h-48 rounded-xl object-cover" />
+        )}
       </div>
 
       <div>
