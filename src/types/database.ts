@@ -1,5 +1,7 @@
 export type WeddingMemberRole = 'owner' | 'partner' | 'family' | 'viewer'
 export type WeddingMemberStatus = 'pending' | 'accepted'
+export type TaskPriority = 'low' | 'medium' | 'high' | 'urgent'
+export type TaskStatus = 'not_started' | 'in_progress' | 'completed' | 'cancelled'
 
 export interface Database {
   public: {
@@ -90,6 +92,52 @@ export interface Database {
         Update: {
           role?: WeddingMemberRole
           status?: WeddingMemberStatus
+        }
+        Relationships: []
+      }
+      tasks: {
+        Row: {
+          id: string
+          wedding_id: string
+          name: string
+          description: string | null
+          category: string
+          assigned_to: string | null
+          due_date: string | null
+          priority: TaskPriority
+          status: TaskStatus
+          estimated_cost: number | null
+          actual_cost: number | null
+          notes: string | null
+          created_by: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          wedding_id: string
+          name: string
+          description?: string | null
+          category?: string
+          assigned_to?: string | null
+          due_date?: string | null
+          priority?: TaskPriority
+          status?: TaskStatus
+          estimated_cost?: number | null
+          actual_cost?: number | null
+          notes?: string | null
+          created_by: string
+        }
+        Update: {
+          name?: string
+          description?: string | null
+          category?: string
+          assigned_to?: string | null
+          due_date?: string | null
+          priority?: TaskPriority
+          status?: TaskStatus
+          estimated_cost?: number | null
+          actual_cost?: number | null
+          notes?: string | null
         }
         Relationships: []
       }

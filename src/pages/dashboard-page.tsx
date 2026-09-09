@@ -1,16 +1,20 @@
-import { CreditCard, ListChecks, Loader2, Users } from 'lucide-react'
+import { CreditCard, Loader2, Users } from 'lucide-react'
 import { BudgetSummaryCard } from '@/components/dashboard/budget-summary-card'
 import { CountdownHero } from '@/components/dashboard/countdown-hero'
 import { EmptySummaryCard } from '@/components/dashboard/empty-summary-card'
 import { QuickActions } from '@/components/dashboard/quick-actions'
+import { TasksSummaryCard } from '@/components/dashboard/tasks-summary-card'
+import { UpcomingTasksCard } from '@/components/dashboard/upcoming-tasks-card'
 import { WeddingTimelineCard } from '@/components/dashboard/wedding-timeline-card'
+import { useTasks } from '@/hooks/use-tasks'
 import { useWedding } from '@/hooks/use-wedding'
 import { daysUntil } from '@/lib/format'
 
 export function DashboardPage() {
-  const { data: wedding, isPending } = useWedding()
+  const { data: wedding, isPending: weddingPending } = useWedding()
+  const { data: tasks, isPending: tasksPending } = useTasks(wedding?.id ?? '')
 
-  if (isPending) {
+  if (weddingPending || tasksPending) {
     return (
       <div className="flex justify-center py-16">
         <Loader2 className="size-6 animate-spin text-rose-400" />
@@ -33,13 +37,7 @@ export function DashboardPage() {
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <BudgetSummaryCard estimatedBudget={wedding.estimated_budget} currency={wedding.currency} />
-        <EmptySummaryCard
-          title="Tasks"
-          icon={ListChecks}
-          description="No tasks yet — start planning by adding your first to-do."
-          actionLabel="Add a task"
-          actionTo="/tasks"
-        />
+        <TasksSummaryCard tasks={tasks ?? []} />
         <EmptySummaryCard
           title="Guests"
           icon={Users}
@@ -55,14 +53,16 @@ export function DashboardPage() {
           weddingDate={wedding.wedding_date}
           receptionDate={wedding.reception_date}
         />
-        <EmptySummaryCard
-          title="Upcoming Payments"
-          icon={CreditCard}
-          description="No payments due yet — add a vendor or budget item to start tracking them."
-          actionLabel="Go to payments"
-          actionTo="/payments"
-        />
+        <UpcomingTasksCard tasks={tasks ?? []} />
       </div>
+
+      <EmptySummaryCard
+        title="Upcoming Payments"
+        icon={CreditCard}
+        description="No payments due yet — add a vendor or budget item to start tracking them."
+        actionLabel="Go to payments"
+        actionTo="/payments"
+      />
     </div>
   )
 }

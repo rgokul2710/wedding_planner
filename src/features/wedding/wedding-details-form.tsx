@@ -7,17 +7,8 @@ import { Button } from '@/components/ui/button'
 import { Input, Label } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { CURRENCIES, DEFAULT_CURRENCY } from '@/lib/currencies'
+import { optionalNonNegativeNumber, optionalPositiveInt, optionalText } from '@/lib/zod-helpers'
 import type { WeddingDetailsInput } from '@/services/weddings'
-
-const optionalText = z.preprocess((val) => (val === '' ? undefined : val), z.string().optional())
-const optionalPositiveInt = z.preprocess(
-  (val) => (val === '' || val === null || val === undefined ? undefined : Number(val)),
-  z.number().int().positive('Must be a positive number').optional(),
-)
-const optionalNonNegativeNumber = z.preprocess(
-  (val) => (val === '' || val === null || val === undefined ? undefined : Number(val)),
-  z.number().nonnegative('Must be zero or more').optional(),
-)
 
 const weddingDetailsSchema = z.object({
   brideName: z.string().min(1, "Bride's name is required"),
