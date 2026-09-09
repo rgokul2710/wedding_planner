@@ -87,7 +87,7 @@ This project is being built incrementally. Each phase ships a working, typecheck
 - [x] **Phase 6** — Budget + payments
 - [x] **Phase 7** — Vendors
 - [x] **Phase 8** — Events / timeline
-- [ ] **Phase 9** — Documents / storage
+- [x] **Phase 9** — Documents / storage (and Inspiration, which the spec's phase list didn't assign its own slot)
 - [ ] **Phase 10** — Family / member permissions
 - [ ] **Phase 11** — Reports
 - [ ] **Phase 12** — Polish, testing, final deployment

@@ -407,6 +407,70 @@ export interface Database {
         }
         Relationships: []
       }
+      documents: {
+        Row: {
+          id: string
+          wedding_id: string
+          vendor_id: string | null
+          name: string
+          category: string
+          storage_path: string
+          file_size: number
+          mime_type: string
+          notes: string | null
+          created_by: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          wedding_id: string
+          vendor_id?: string | null
+          name: string
+          category?: string
+          storage_path: string
+          file_size: number
+          mime_type: string
+          notes?: string | null
+          created_by: string
+        }
+        Update: {
+          vendor_id?: string | null
+          name?: string
+          category?: string
+          notes?: string | null
+        }
+        Relationships: []
+      }
+      inspiration_images: {
+        Row: {
+          id: string
+          wedding_id: string
+          category: string
+          storage_path: string
+          file_size: number
+          mime_type: string
+          notes: string | null
+          is_favorite: boolean
+          created_by: string
+          created_at: string
+        }
+        Insert: {
+          wedding_id: string
+          category?: string
+          storage_path: string
+          file_size: number
+          mime_type: string
+          notes?: string | null
+          is_favorite?: boolean
+          created_by: string
+        }
+        Update: {
+          category?: string
+          notes?: string | null
+          is_favorite?: boolean
+        }
+        Relationships: []
+      }
     }
     Views: Record<string, never>
     Functions: {
