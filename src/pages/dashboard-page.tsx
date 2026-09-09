@@ -1,13 +1,15 @@
-import { CreditCard, Loader2 } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 import { BudgetSummaryCard } from '@/components/dashboard/budget-summary-card'
 import { CountdownHero } from '@/components/dashboard/countdown-hero'
-import { EmptySummaryCard } from '@/components/dashboard/empty-summary-card'
 import { GuestsSummaryCard } from '@/components/dashboard/guests-summary-card'
 import { QuickActions } from '@/components/dashboard/quick-actions'
 import { TasksSummaryCard } from '@/components/dashboard/tasks-summary-card'
+import { UpcomingPaymentsCard } from '@/components/dashboard/upcoming-payments-card'
 import { UpcomingTasksCard } from '@/components/dashboard/upcoming-tasks-card'
 import { WeddingTimelineCard } from '@/components/dashboard/wedding-timeline-card'
+import { useBudgetItems } from '@/hooks/use-budget-items'
 import { useGuests } from '@/hooks/use-guests'
+import { usePayments } from '@/hooks/use-payments'
 import { useTasks } from '@/hooks/use-tasks'
 import { useWedding } from '@/hooks/use-wedding'
 import { daysUntil } from '@/lib/format'
@@ -16,8 +18,10 @@ export function DashboardPage() {
   const { data: wedding, isPending: weddingPending } = useWedding()
   const { data: tasks, isPending: tasksPending } = useTasks(wedding?.id ?? '')
   const { data: guests, isPending: guestsPending } = useGuests(wedding?.id ?? '')
+  const { data: budgetItems, isPending: budgetPending } = useBudgetItems(wedding?.id ?? '')
+  const { data: payments, isPending: paymentsPending } = usePayments(wedding?.id ?? '')
 
-  if (weddingPending || tasksPending || guestsPending) {
+  if (weddingPending || tasksPending || guestsPending || budgetPending || paymentsPending) {
     return (
       <div className="flex justify-center py-16">
         <Loader2 className="size-6 animate-spin text-rose-400" />
@@ -39,7 +43,7 @@ export function DashboardPage() {
       <QuickActions />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <BudgetSummaryCard estimatedBudget={wedding.estimated_budget} currency={wedding.currency} />
+        <BudgetSummaryCard estimatedBudget={wedding.estimated_budget} currency={wedding.currency} budgetItems={budgetItems ?? []} />
         <TasksSummaryCard tasks={tasks ?? []} />
         <GuestsSummaryCard guests={guests ?? []} />
       </div>
@@ -53,13 +57,7 @@ export function DashboardPage() {
         <UpcomingTasksCard tasks={tasks ?? []} />
       </div>
 
-      <EmptySummaryCard
-        title="Upcoming Payments"
-        icon={CreditCard}
-        description="No payments due yet — add a vendor or budget item to start tracking them."
-        actionLabel="Go to payments"
-        actionTo="/payments"
-      />
+      <UpcomingPaymentsCard payments={payments ?? []} currency={wedding.currency} />
     </div>
   )
 }

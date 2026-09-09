@@ -1,3 +1,5 @@
+import { Loader2 } from 'lucide-react'
+import { Suspense, lazy } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { RedirectIfAuthed, RedirectIfHasWedding, RequireAuth, RequireWedding } from '@/components/protected-route'
 import { AppLayout } from '@/layouts/app-layout'
@@ -6,7 +8,6 @@ import { ForgotPasswordPage } from '@/pages/auth/forgot-password-page'
 import { LoginPage } from '@/pages/auth/login-page'
 import { SignupPage } from '@/pages/auth/signup-page'
 import { UpdatePasswordPage } from '@/pages/auth/update-password-page'
-import { BudgetPage } from '@/pages/budget-page'
 import { DashboardPage } from '@/pages/dashboard-page'
 import { DocumentsPage } from '@/pages/documents-page'
 import { EventsPage } from '@/pages/events-page'
@@ -21,6 +22,17 @@ import { ReportsPage } from '@/pages/reports-page'
 import { SettingsPage } from '@/pages/settings-page'
 import { TasksPage } from '@/pages/tasks-page'
 import { VendorsPage } from '@/pages/vendors-page'
+
+// Recharts is heavy — load the Budget page's bundle only when it's visited.
+const BudgetPage = lazy(() => import('@/pages/budget-page').then((m) => ({ default: m.BudgetPage })))
+
+function RouteFallback() {
+  return (
+    <div className="flex justify-center py-16">
+      <Loader2 className="size-6 animate-spin text-rose-400" />
+    </div>
+  )
+}
 
 export function App() {
   return (
@@ -83,7 +95,14 @@ export function App() {
         <Route index element={<DashboardPage />} />
         <Route path="/tasks" element={<TasksPage />} />
         <Route path="/guests" element={<GuestsPage />} />
-        <Route path="/budget" element={<BudgetPage />} />
+        <Route
+          path="/budget"
+          element={
+            <Suspense fallback={<RouteFallback />}>
+              <BudgetPage />
+            </Suspense>
+          }
+        />
         <Route path="/vendors" element={<VendorsPage />} />
         <Route path="/events" element={<EventsPage />} />
         <Route path="/payments" element={<PaymentsPage />} />

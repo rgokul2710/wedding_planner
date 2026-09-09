@@ -4,6 +4,8 @@ export type TaskPriority = 'low' | 'medium' | 'high' | 'urgent'
 export type TaskStatus = 'not_started' | 'in_progress' | 'completed' | 'cancelled'
 export type RsvpStatus = 'pending' | 'confirmed' | 'declined'
 export type InvitationStatus = 'not_sent' | 'sent' | 'delivered'
+export type BudgetPaymentStatus = 'not_paid' | 'partially_paid' | 'fully_paid'
+export type PaymentMethod = 'cash' | 'upi' | 'bank_transfer' | 'card' | 'other'
 
 export interface Database {
   public: {
@@ -210,6 +212,105 @@ export interface Database {
           accommodation_required?: boolean
           transportation_required?: boolean
           invitation_status?: InvitationStatus
+          notes?: string | null
+        }
+        Relationships: []
+      }
+      budget_categories: {
+        Row: {
+          id: string
+          wedding_id: string
+          name: string
+          created_at: string
+        }
+        Insert: {
+          wedding_id: string
+          name: string
+        }
+        Update: {
+          name?: string
+        }
+        Relationships: []
+      }
+      budget_items: {
+        Row: {
+          id: string
+          wedding_id: string
+          category_id: string | null
+          description: string
+          vendor: string | null
+          planned_amount: number
+          actual_amount: number | null
+          amount_paid: number
+          due_date: string | null
+          notes: string | null
+          created_by: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          wedding_id: string
+          category_id?: string | null
+          description: string
+          vendor?: string | null
+          planned_amount?: number
+          actual_amount?: number | null
+          amount_paid?: number
+          due_date?: string | null
+          notes?: string | null
+          created_by: string
+        }
+        Update: {
+          category_id?: string | null
+          description?: string
+          vendor?: string | null
+          planned_amount?: number
+          actual_amount?: number | null
+          amount_paid?: number
+          due_date?: string | null
+          notes?: string | null
+        }
+        Relationships: []
+      }
+      payments: {
+        Row: {
+          id: string
+          wedding_id: string
+          vendor: string | null
+          description: string
+          amount: number
+          payment_date: string | null
+          payment_method: PaymentMethod | null
+          payment_status: BudgetPaymentStatus
+          due_date: string | null
+          reference_id: string | null
+          notes: string | null
+          created_by: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          wedding_id: string
+          vendor?: string | null
+          description: string
+          amount: number
+          payment_date?: string | null
+          payment_method?: PaymentMethod | null
+          payment_status?: BudgetPaymentStatus
+          due_date?: string | null
+          reference_id?: string | null
+          notes?: string | null
+          created_by: string
+        }
+        Update: {
+          vendor?: string | null
+          description?: string
+          amount?: number
+          payment_date?: string | null
+          payment_method?: PaymentMethod | null
+          payment_status?: BudgetPaymentStatus
+          due_date?: string | null
+          reference_id?: string | null
           notes?: string | null
         }
         Relationships: []

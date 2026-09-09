@@ -2,13 +2,15 @@ import { Wallet } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { DashboardCard } from '@/components/dashboard/dashboard-card'
 import { formatCurrency } from '@/lib/format'
+import type { BudgetItem } from '@/services/budget-items'
 
 interface BudgetSummaryCardProps {
   estimatedBudget: number | null
   currency: string
+  budgetItems: BudgetItem[]
 }
 
-export function BudgetSummaryCard({ estimatedBudget, currency }: BudgetSummaryCardProps) {
+export function BudgetSummaryCard({ estimatedBudget, currency, budgetItems }: BudgetSummaryCardProps) {
   if (!estimatedBudget) {
     return (
       <DashboardCard title="Budget" icon={Wallet}>
@@ -23,7 +25,7 @@ export function BudgetSummaryCard({ estimatedBudget, currency }: BudgetSummaryCa
     )
   }
 
-  const spent = 0
+  const spent = budgetItems.reduce((total, item) => total + item.amount_paid, 0)
   const remaining = estimatedBudget - spent
   const spentPercent = Math.min(100, Math.round((spent / estimatedBudget) * 100))
 
@@ -44,7 +46,9 @@ export function BudgetSummaryCard({ estimatedBudget, currency }: BudgetSummaryCa
           </div>
           <div>
             <dt className="text-ink-400">Remaining</dt>
-            <dd className="font-medium text-ink-800 dark:text-ink-100">{formatCurrency(remaining, currency)}</dd>
+            <dd className={`font-medium ${remaining < 0 ? 'text-danger-500' : 'text-ink-800 dark:text-ink-100'}`}>
+              {formatCurrency(remaining, currency)}
+            </dd>
           </div>
         </dl>
       </div>
