@@ -8,6 +8,7 @@ import { UpcomingPaymentsCard } from '@/components/dashboard/upcoming-payments-c
 import { UpcomingTasksCard } from '@/components/dashboard/upcoming-tasks-card'
 import { WeddingTimelineCard } from '@/components/dashboard/wedding-timeline-card'
 import { useBudgetItems } from '@/hooks/use-budget-items'
+import { useEvents } from '@/hooks/use-events'
 import { useGuests } from '@/hooks/use-guests'
 import { usePayments } from '@/hooks/use-payments'
 import { useTasks } from '@/hooks/use-tasks'
@@ -20,8 +21,9 @@ export function DashboardPage() {
   const { data: guests, isPending: guestsPending } = useGuests(wedding?.id ?? '')
   const { data: budgetItems, isPending: budgetPending } = useBudgetItems(wedding?.id ?? '')
   const { data: payments, isPending: paymentsPending } = usePayments(wedding?.id ?? '')
+  const { data: events, isPending: eventsPending } = useEvents(wedding?.id ?? '')
 
-  if (weddingPending || tasksPending || guestsPending || budgetPending || paymentsPending) {
+  if (weddingPending || tasksPending || guestsPending || budgetPending || paymentsPending || eventsPending) {
     return (
       <div className="flex justify-center py-16">
         <Loader2 className="size-6 animate-spin text-rose-400" />
@@ -53,6 +55,7 @@ export function DashboardPage() {
           engagementDate={wedding.engagement_date}
           weddingDate={wedding.wedding_date}
           receptionDate={wedding.reception_date}
+          events={events ?? []}
         />
         <UpcomingTasksCard tasks={tasks ?? []} />
       </div>

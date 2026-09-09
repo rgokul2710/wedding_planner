@@ -367,6 +367,46 @@ export interface Database {
         }
         Relationships: []
       }
+      events: {
+        Row: {
+          id: string
+          wedding_id: string
+          name: string
+          event_date: string
+          start_time: string | null
+          end_time: string | null
+          venue: string | null
+          description: string | null
+          responsible_person: string | null
+          notes: string | null
+          created_by: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          wedding_id: string
+          name: string
+          event_date: string
+          start_time?: string | null
+          end_time?: string | null
+          venue?: string | null
+          description?: string | null
+          responsible_person?: string | null
+          notes?: string | null
+          created_by: string
+        }
+        Update: {
+          name?: string
+          event_date?: string
+          start_time?: string | null
+          end_time?: string | null
+          venue?: string | null
+          description?: string | null
+          responsible_person?: string | null
+          notes?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: Record<string, never>
     Functions: {

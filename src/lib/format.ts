@@ -16,6 +16,14 @@ export function formatDate(dateString: string) {
   )
 }
 
+/** Formats a Postgres `HH:MM:SS` time string as e.g. "2:30 PM". */
+export function formatTime(timeString: string) {
+  const [hours, minutes] = timeString.split(':').map(Number)
+  const date = new Date()
+  date.setHours(hours, minutes, 0, 0)
+  return new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit' }).format(date)
+}
+
 /** Calendar-day difference between today and a `YYYY-MM-DD` date, ignoring time of day. */
 export function daysUntil(dateString: string) {
   const [year, month, day] = dateString.split('-').map(Number)
