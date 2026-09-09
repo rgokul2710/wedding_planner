@@ -18,13 +18,13 @@ import { MorePage } from '@/pages/more-page'
 import { NotFoundPage } from '@/pages/not-found-page'
 import { OnboardingPage } from '@/pages/onboarding-page'
 import { PaymentsPage } from '@/pages/payments-page'
-import { ReportsPage } from '@/pages/reports-page'
 import { SettingsPage } from '@/pages/settings-page'
 import { TasksPage } from '@/pages/tasks-page'
 import { VendorsPage } from '@/pages/vendors-page'
 
-// Recharts is heavy — load the Budget page's bundle only when it's visited.
+// Recharts is heavy — load these pages' bundles only when they're visited.
 const BudgetPage = lazy(() => import('@/pages/budget-page').then((m) => ({ default: m.BudgetPage })))
+const ReportsPage = lazy(() => import('@/pages/reports-page').then((m) => ({ default: m.ReportsPage })))
 
 function RouteFallback() {
   return (
@@ -108,7 +108,14 @@ export function App() {
         <Route path="/payments" element={<PaymentsPage />} />
         <Route path="/documents" element={<DocumentsPage />} />
         <Route path="/inspiration" element={<InspirationPage />} />
-        <Route path="/reports" element={<ReportsPage />} />
+        <Route
+          path="/reports"
+          element={
+            <Suspense fallback={<RouteFallback />}>
+              <ReportsPage />
+            </Suspense>
+          }
+        />
         <Route path="/family" element={<FamilyPage />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/more" element={<MorePage />} />
