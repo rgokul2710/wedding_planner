@@ -1,3 +1,6 @@
+export type WeddingMemberRole = 'owner' | 'partner' | 'family' | 'viewer'
+export type WeddingMemberStatus = 'pending' | 'accepted'
+
 export interface Database {
   public: {
     Tables: {
@@ -18,6 +21,96 @@ export interface Database {
           full_name?: string | null
           avatar_url?: string | null
         }
+        Relationships: []
+      }
+      weddings: {
+        Row: {
+          id: string
+          bride_name: string
+          groom_name: string
+          wedding_date: string
+          engagement_date: string | null
+          reception_date: string | null
+          wedding_venue: string | null
+          reception_venue: string | null
+          city: string | null
+          expected_guest_count: number | null
+          estimated_budget: number | null
+          currency: string
+          created_by: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          bride_name: string
+          groom_name: string
+          wedding_date: string
+          engagement_date?: string | null
+          reception_date?: string | null
+          wedding_venue?: string | null
+          reception_venue?: string | null
+          city?: string | null
+          expected_guest_count?: number | null
+          estimated_budget?: number | null
+          currency?: string
+          created_by: string
+        }
+        Update: {
+          bride_name?: string
+          groom_name?: string
+          wedding_date?: string
+          engagement_date?: string | null
+          reception_date?: string | null
+          wedding_venue?: string | null
+          reception_venue?: string | null
+          city?: string | null
+          expected_guest_count?: number | null
+          estimated_budget?: number | null
+          currency?: string
+        }
+        Relationships: []
+      }
+      wedding_members: {
+        Row: {
+          id: string
+          wedding_id: string
+          user_id: string | null
+          role: WeddingMemberRole
+          invited_email: string | null
+          status: WeddingMemberStatus
+          created_at: string
+        }
+        Insert: {
+          wedding_id: string
+          user_id?: string | null
+          role?: WeddingMemberRole
+          invited_email?: string | null
+          status?: WeddingMemberStatus
+        }
+        Update: {
+          role?: WeddingMemberRole
+          status?: WeddingMemberStatus
+        }
+        Relationships: []
+      }
+    }
+    Views: Record<string, never>
+    Functions: {
+      create_wedding: {
+        Args: {
+          p_bride_name: string
+          p_groom_name: string
+          p_wedding_date: string
+          p_engagement_date: string | null
+          p_reception_date: string | null
+          p_wedding_venue: string | null
+          p_reception_venue: string | null
+          p_city: string | null
+          p_expected_guest_count: number | null
+          p_estimated_budget: number | null
+          p_currency: string
+        }
+        Returns: Database['public']['Tables']['weddings']['Row']
       }
     }
   }

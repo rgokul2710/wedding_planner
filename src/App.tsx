@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
-import { RedirectIfAuthed, RequireAuth } from '@/components/protected-route'
+import { RedirectIfAuthed, RedirectIfHasWedding, RequireAuth, RequireWedding } from '@/components/protected-route'
 import { AppLayout } from '@/layouts/app-layout'
 import { AuthLayout } from '@/layouts/auth-layout'
 import { ForgotPasswordPage } from '@/pages/auth/forgot-password-page'
@@ -15,6 +15,7 @@ import { GuestsPage } from '@/pages/guests-page'
 import { InspirationPage } from '@/pages/inspiration-page'
 import { MorePage } from '@/pages/more-page'
 import { NotFoundPage } from '@/pages/not-found-page'
+import { OnboardingPage } from '@/pages/onboarding-page'
 import { PaymentsPage } from '@/pages/payments-page'
 import { ReportsPage } from '@/pages/reports-page'
 import { SettingsPage } from '@/pages/settings-page'
@@ -60,9 +61,22 @@ export function App() {
       </Route>
 
       <Route
+        path="/onboarding"
         element={
           <RequireAuth>
-            <AppLayout />
+            <RedirectIfHasWedding>
+              <OnboardingPage />
+            </RedirectIfHasWedding>
+          </RequireAuth>
+        }
+      />
+
+      <Route
+        element={
+          <RequireAuth>
+            <RequireWedding>
+              <AppLayout />
+            </RequireWedding>
           </RequireAuth>
         }
       >
