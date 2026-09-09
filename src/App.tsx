@@ -1,9 +1,11 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
+import { RedirectIfAuthed, RequireAuth } from '@/components/protected-route'
 import { AppLayout } from '@/layouts/app-layout'
 import { AuthLayout } from '@/layouts/auth-layout'
 import { ForgotPasswordPage } from '@/pages/auth/forgot-password-page'
 import { LoginPage } from '@/pages/auth/login-page'
 import { SignupPage } from '@/pages/auth/signup-page'
+import { UpdatePasswordPage } from '@/pages/auth/update-password-page'
 import { BudgetPage } from '@/pages/budget-page'
 import { DashboardPage } from '@/pages/dashboard-page'
 import { DocumentsPage } from '@/pages/documents-page'
@@ -23,12 +25,47 @@ export function App() {
   return (
     <Routes>
       <Route element={<AuthLayout />}>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route
+          path="/login"
+          element={
+            <RedirectIfAuthed>
+              <LoginPage />
+            </RedirectIfAuthed>
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            <RedirectIfAuthed>
+              <SignupPage />
+            </RedirectIfAuthed>
+          }
+        />
+        <Route
+          path="/forgot-password"
+          element={
+            <RedirectIfAuthed>
+              <ForgotPasswordPage />
+            </RedirectIfAuthed>
+          }
+        />
+        <Route
+          path="/update-password"
+          element={
+            <RequireAuth>
+              <UpdatePasswordPage />
+            </RequireAuth>
+          }
+        />
       </Route>
 
-      <Route element={<AppLayout />}>
+      <Route
+        element={
+          <RequireAuth>
+            <AppLayout />
+          </RequireAuth>
+        }
+      >
         <Route index element={<DashboardPage />} />
         <Route path="/tasks" element={<TasksPage />} />
         <Route path="/guests" element={<GuestsPage />} />

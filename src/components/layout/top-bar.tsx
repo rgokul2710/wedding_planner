@@ -1,4 +1,5 @@
-import { Moon, Search, Sun } from 'lucide-react'
+import { LogOut, Moon, Search, Settings, Sun } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
@@ -9,10 +10,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { useAuth } from '@/hooks/use-auth'
 import { useTheme } from '@/hooks/use-theme'
 
 export function TopBar() {
   const { theme, toggleTheme } = useTheme()
+  const { user, signOut } = useAuth()
+
+  const initials = (user?.user_metadata?.full_name as string | undefined)
+    ?.split(' ')
+    .map((part) => part[0])
+    .slice(0, 2)
+    .join('')
+    .toUpperCase() || user?.email?.slice(0, 2).toUpperCase() || '?'
 
   return (
     <header className="flex items-center gap-3 border-b border-ink-100 bg-cream-25/80 px-4 py-3 backdrop-blur-sm dark:border-ink-800 dark:bg-ink-900/80 sm:px-6">
@@ -33,17 +43,24 @@ export function TopBar() {
           <DropdownMenuTrigger asChild>
             <button type="button" className="rounded-full outline-none focus-visible:ring-2 focus-visible:ring-rose-400">
               <Avatar>
-                <AvatarFallback>GP</AvatarFallback>
+                <AvatarFallback>{initials}</AvatarFallback>
               </Avatar>
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuLabel>{user?.email}</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Wedding Settings</DropdownMenuItem>
-            <DropdownMenuItem>Profile</DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link to="/settings">
+                <Settings className="size-4" />
+                Settings
+              </Link>
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Log out</DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => signOut()}>
+              <LogOut className="size-4" />
+              Log out
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

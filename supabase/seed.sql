@@ -1,0 +1,3 @@
+-- Local/dev seed data. Empty for now — every table so far (profiles) is
+-- populated by signing up through the app, not by seed data. Add rows here
+-- once later phases introduce tables worth pre-seeding for local testing.

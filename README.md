@@ -10,15 +10,27 @@ A private, mobile-first wedding planning app — tasks, guests, budget, vendors,
 - **React Router** — client-side routing
 - **lucide-react** — icons
 - **sonner** — toast notifications
-- **Supabase** — auth, database, storage, realtime (added starting Phase 2)
+- **Supabase** — auth, database, storage, realtime
+- **react-hook-form + zod** — form state and validation
 
 ## Getting started
 
+### 1. Create a Supabase project (free tier)
+
+1. Go to [supabase.com](https://supabase.com) and create a free account/project.
+2. In the project, open **SQL Editor** and run the contents of [supabase/migrations/0001_profiles.sql](supabase/migrations/0001_profiles.sql) (and any later migration files, in order, as they're added).
+3. Go to **Project Settings → API** and copy the **Project URL** and **anon public** key.
+4. In **Authentication → URL Configuration**, add your dev and production URLs (e.g. `http://localhost:5173/wedding_planner/` and `https://<github-username>.github.io/wedding_planner/`) as **Redirect URLs** — this is required for the password-reset email link to work.
+
+### 2. Run the app
+
 ```bash
 npm install
-cp .env.example .env   # fill in Supabase values once Phase 2 is set up
+cp .env.example .env   # paste in the Project URL and anon key from step 1
 npm run dev
 ```
+
+If `.env` is missing or incomplete, the app shows a friendly "Supabase isn't configured yet" screen instead of crashing.
 
 Other scripts:
 
@@ -36,14 +48,14 @@ src/
   components/   reusable UI (components/ui/* are design-system primitives)
   layouts/      route-level layout shells (AppLayout, AuthLayout)
   pages/        one file per route
-  hooks/        shared React hooks (e.g. theme)
-  lib/          framework-agnostic helpers (cn, nav config, and — from Phase 2 — the Supabase client)
+  hooks/        shared React hooks (theme, auth session)
+  lib/          framework-agnostic helpers (cn, nav config, Supabase client)
   services/     data-access functions per module (added as each module is built)
-  types/        shared TypeScript types (added as each module is built)
+  types/        shared TypeScript types (database.ts grows as each module is built)
   features/     module-specific non-UI logic (added as each module is built)
 supabase/
-  migrations/   SQL migration files (added in Phase 2)
-  seed.sql       local seed data (added in Phase 2)
+  migrations/   SQL migration files, applied in order via the Supabase SQL editor
+  seed.sql      local seed data (empty until a later phase needs it)
 .github/workflows/deploy.yml   GitHub Pages deploy workflow
 ```
 
@@ -54,11 +66,11 @@ The app deploys automatically to GitHub Pages on every push to `main` via [.gith
 **One-time manual setup required in the GitHub repo:**
 
 1. Go to **Settings → Pages** and set **Source** to **GitHub Actions**.
-2. Once Phase 2 (Supabase) is wired up, go to **Settings → Secrets and variables → Actions** and add:
+2. Go to **Settings → Secrets and variables → Actions** and add:
    - `VITE_SUPABASE_URL`
    - `VITE_SUPABASE_ANON_KEY`
 
-   (The build works without these today since no code reads them yet — but the workflow already passes them through so nothing needs to change later.)
+   Without these, the deployed site will show the "Supabase isn't configured yet" screen.
 3. After the first successful workflow run, the app will be live at `https://<github-username>.github.io/wedding_planner/`.
 
 Routing note: this app uses `BrowserRouter` with a `dist/404.html` copy of `index.html` (created automatically by `npm run build`) so that deep links (e.g. reloading `/tasks` directly) work correctly on GitHub Pages, which has no server-side rewrites.
@@ -68,7 +80,7 @@ Routing note: this app uses `BrowserRouter` with a `dist/404.html` copy of `inde
 This project is being built incrementally. Each phase ships a working, typechecked, building app before moving to the next.
 
 - [x] **Phase 1** — Project setup, routing, UI foundation, design system, light/dark mode, GitHub Pages deployment pipeline
-- [ ] **Phase 2** — Supabase setup + authentication
+- [x] **Phase 2** — Supabase setup + authentication (sign up, log in, log out, password reset, protected routes)
 - [ ] **Phase 3** — Wedding setup + dashboard
 - [ ] **Phase 4** — Tasks
 - [ ] **Phase 5** — Guests
